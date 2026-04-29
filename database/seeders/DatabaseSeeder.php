@@ -31,7 +31,17 @@ class DatabaseSeeder extends Seeder
         User::factory(5)->create(['role' => 'simple', 'is_approved' => true, 'level' => 'beginner']);
 
         // Appareils
-        Device::factory(10)->create();
+        Device::factory()->count(10)->create()->each(function ($device) {
+            $device->update([
+                'status' => fake()->randomElement(['online', 'offline', 'maintenance']),
+                'is_active' => fake()->boolean(80),
+                'category_id' => DeviceCategory::inRandomOrder()->first()->id,
+                'zone_id' => Zone::inRandomOrder()->first()->id,
+                'current_data' => [
+                    'temperature' => fake()->randomFloat(1, -5, 30),
+                ],
+            ]);
+        });
 
         
         // Actualités
