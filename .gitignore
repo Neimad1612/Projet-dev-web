@@ -23,3 +23,11 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+# Laravel storage
+/storage/*
+/bootstrap/cache/*
+
+/database/database.sqlite
+
+# mais garder les dossiers vides dans le repo si besoin
+!.gitignore
