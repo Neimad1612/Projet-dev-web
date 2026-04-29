@@ -818,6 +818,7 @@
                                 </div>
                             </li>
                             <li><a class="dropdown-item" href="{{ route('simple.profile.show') }}">Mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ route('simple.dashboard') }}">Dashboard</a></li>
                             <li><a class="dropdown-item" href="{{ route('simple.xp.index') }}">Historique XP</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
