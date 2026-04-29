@@ -10,9 +10,8 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $stats = [
-            'total_users'    => User::where('role', '!=', 'visitor')->count(),
-            // CORRECTION ICI : pendingApproval() au lieu de scopePendingApproval()
-            'pending_users'  => User::pendingApproval()->count(),
+            'total_users' => User::where('is_approved', true)->count(),
+            'pending_users' => User::where('is_approved', false)->count(),
             'total_devices'  => Device::count(),
             'online_devices' => Device::where('status', 'online')->count(),
         ];

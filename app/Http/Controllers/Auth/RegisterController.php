@@ -37,7 +37,7 @@ class RegisterController extends Controller
             'email.unique'           => 'Cet email est déjà utilisé.',
         ]);
 
-        User::create([
+        $user = User::create([
             'name'       => $validated['name'],
             'pseudo'     => $validated['pseudo'],
             'email'      => $validated['email'],
@@ -47,8 +47,10 @@ class RegisterController extends Controller
             'role'       => User::ROLE_SIMPLE,
             'level'      => User::LEVEL_BEGINNER,
             'experience_points' => 0,
-            'is_approved' => false,
         ]);
+
+        $user->is_approved = false;
+        $user->save();
 
         return redirect()->route('public.login')
                          ->with('info', "Votre compte a été créé ! Un administrateur doit valider votre inscription avant que vous puissiez vous connecter.");
