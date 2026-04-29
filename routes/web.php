@@ -35,6 +35,9 @@ Route::middleware(['auth', 'role:simple,complex,admin', 'track.login'])->prefix(
     Route::get('/objets', [DeviceViewController::class, 'index'])->name('devices.index');
     Route::get('/objets/{device}', [DeviceViewController::class, 'show'])->middleware('track.device.view')->name('devices.show');
     Route::get('/experience', [ExperienceController::class, 'index'])->name('xp.index');
+    Route::get('/utilisateurs', [UserProfileController::class, 'index'])->name('users.index');
+    Route::get('/utilisateurs', [UserProfileController::class, 'index'])->name('users.index');
+    Route::get('/utilisateurs/{user}', [UserProfileController::class, 'show'])->name('users.show');
 });
 
 // ── MODULE COMPLEXE (Avancé/Expert uniquement) ────────────────────────────
