@@ -41,21 +41,21 @@ Cloner le projet :
 git clone https://github.com/Neimad1612/Projet-dev-web.git cd Projet-dev-web 
 
 Installer les dépendances PHP :
-bash id="x8m2dl" composer install 
+composer install 
 
 Installer les dépendances front :
-bash id="p7v4sa" npm install npm run build 
+npm install npm run build 
 
 Configurer l’environnement :
-bash id="k4t9we" cp .env.example .env php artisan key:generate 
+cp .env.example .env php artisan key:generate 
 
 Créer la base de données et remplir les données de test :
-bash id="z2n6rc" php artisan migrate:fresh --seed 
+php artisan migrate:fresh --seed 
 
 Lancer le serveur :
-bash id="u9b3mf" php artisan serve 
+php artisan serve 
 
-Le site est accessible sur http://127.0.0.1:8000
+Le site est ensuite accessible sur http://127.0.0.1:8000
 
 
 Organisation du projet
