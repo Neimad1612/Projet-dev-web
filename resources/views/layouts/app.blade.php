@@ -711,6 +711,7 @@
                             </a>
                         </li>
 
+                        @if(!auth()->user()->isAdmin())
                         <li class="nav-item">
                             <a class="nav-link @if(request()->routeIs('simple.users.*')) active @endif"
                                 href="{{ route('simple.users.index') }}">
@@ -718,6 +719,7 @@
                                 Membres
                             </a>
                         </li>
+                    @endif
                         @if(auth()->user()->hasAccessToManagement())
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle @if(request()->routeIs('complex.*')) active @endif"
