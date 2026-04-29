@@ -14,7 +14,9 @@
                         src="{{ $user->avatar_url }}"
                         alt="Avatar"
                         class="rounded-circle mb-3"
-                        style="width: 100px; height: 100px; object-fit: cover;"
+                        style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#avatarModal"
                     >
                     <h2 style="font-family: 'Playfair Display', serif; color: var(--leon-dark);">
                         {{ $user->pseudo ?? $user->name }}
@@ -45,6 +47,26 @@
                     </a>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{-- Modal photo de profil --}}
+<div class="modal fade" id="avatarModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 bg-transparent shadow-none">
+            <div class="modal-body text-center p-0">
+                <img
+                    src="{{ $user->avatar_url }}"
+                    alt="Avatar"
+                    class="img-fluid rounded"
+                    style="max-height: 80vh;"
+                >
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
