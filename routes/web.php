@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\{LoginController, RegisterController};
 use App\Http\Controllers\Simple\{DashboardController, ProfileController, DeviceViewController, ExperienceController};
 use App\Http\Controllers\Complex\{DeviceManagementController};
 use App\Http\Controllers\Admin\{AdminDashboardController, AdminUserController};
+use App\Http\Controllers\UserProfileController;
+
 // ── MODULE PUBLIC (Visiteurs) ─────────────────────────────────────────────
 Route::prefix('')->name('public.')->group(function () {
     Route::get('/', [PublicHomeController::class, 'index'])->name('home');
@@ -58,6 +60,7 @@ Route::middleware(['auth', 'role:admin', 'level:expert', 'track.login'])->prefix
     Route::get('/utilisateurs/en-attente', [AdminUserController::class, 'pending'])->name('users.pending');
     Route::post('/utilisateurs/{user}/approuver', [AdminUserController::class, 'approve'])->name('users.approve');
     Route::post('/utilisateurs/{user}/xp', [AdminUserController::class, 'adjustXp'])->name('users.xp');
+    Route::get('/utilisateurs/{user}/profil', [UserProfileController::class, 'show'])->name('users.show');
 
     // --- ROUTES PLACEHOLDERS (En construction) ---
     Route::get('/categories', function() { return '<div style="text-align:center; padding:100px; font-family:sans-serif;"><h1>🚧 Gestion des Catégories</h1><p>Prévu pour le Sprint 2.</p><a href="/administration">Retour</a></div>'; })->name('categories.index');
