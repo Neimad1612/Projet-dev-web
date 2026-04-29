@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Cache;
 
-// 🛑 SÉCURITÉ : 'role', 'level', 'experience_points' et 'is_approved' retirés du Fillable
 #[Fillable(['name', 'email', 'password', 'pseudo', 'gender', 'birth_date', 'avatar'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -42,11 +41,34 @@ class User extends Authenticatable
 
     public function recalculateLevel(): bool {
         $newLevel = self::LEVEL_BEGINNER;
+
         foreach (array_reverse(self::XP_THRESHOLDS, true) as $level => $threshold) {
-            if ($this->experience_points >= $threshold) { $newLevel = $level; break; }
+            if ($this->experience_points >= $threshold) {
+                $newLevel = $level;
+                break;
+            }
         }
-        if ($this->level !== $newLevel) { $this->level = $newLevel; return true; }
+
+        if ($this->level !== $newLevel) {
+            $this->level = $newLevel;
+
+            // Synchronise le rôle avec le niveau
+            $this->syncRoleWithLevel();
+
+            return true;
+        }
+
         return false;
+    }
+
+    protected function syncRoleWithLevel(): void {
+        if ($this->level === self::LEVEL_ADVANCED && $this->role === self::ROLE_SIMPLE) {
+            $this->role = self::ROLE_COMPLEX;
+        }
+        if ($this->level === self::LEVEL_EXPERT && $this->role === self::ROLE_COMPLEX) {
+            $this->role = self::ROLE_ADMIN;
+        }
+
     }
 
     public function getAgeAttribute(): ?int {

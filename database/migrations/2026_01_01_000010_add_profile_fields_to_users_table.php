@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->date('birth_date')->nullable()->after('gender');
             $table->string('avatar')->nullable()->after('birth_date');
 
-            $table->enum('role', ['visitor', 'simple', 'complex', 'admin'])->default('visitor')->after('avatar');
+            $table->enum('role', ['visitor', 'simple', 'complex', 'admin'])->default('simple')->after('avatar');
             $table->enum('level', ['beginner', 'intermediate', 'advanced', 'expert'])->default('beginner')->after('role');
             $table->unsignedInteger('experience_points')->default(0)->after('level');
 

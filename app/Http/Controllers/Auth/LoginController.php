@@ -40,12 +40,12 @@ class LoginController extends Controller
         }
 
         $user = Auth::user();
-        if (!$user->is_approved && $user->role !== 'visitor') {
+        if (!$user->is_approved) {
             Auth::logout();
             return back()->withErrors([
-                'email' => 'Votre compte est en attente de validation par un administrateur.',
+                'email' => 'Compte en attente de validation.'
             ]);
-        }
+}
 
         RateLimiter::clear($throttleKey);
         $request->session()->regenerate();

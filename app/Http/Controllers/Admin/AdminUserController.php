@@ -66,7 +66,7 @@ class AdminUserController extends Controller
     
     // AJOUT TECHNIQUE : Attribution automatique du rôle 'simple' [cite: 45, 132]
     // Cela évite que l'utilisateur soit bloqué en tant que 'visiteur' sans accès.
-    if (empty($user->role) || $user->role === 'visiteur') {
+    if (empty($user->role) || $user->role === 'visitor') {
         $user->role = 'simple';
     }
     
