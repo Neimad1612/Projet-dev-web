@@ -28,13 +28,20 @@
     <div class="row">
         @forelse($news as $item)
             <div class="col-md-4 mb-4">
-                <div class="card h-100" style="border-color:var(--leon-border);">
-                    <div class="card-body">
-                        <span class="badge" style="background:var(--leon-gold); color:#000;">{{ ucfirst($item->category) }}</span>
-                        <h5 class="card-title mt-2">{{ $item->title }}</h5>
-                        <p class="card-text text-muted" style="font-size:0.9rem;">{{ $item->excerpt }}</p>
+                <a href="{{ route('public.news.show', $item->slug) }}" class="text-decoration-none text-dark">
+                    <div class="card h-100" style="border-color:var(--leon-border); cursor:pointer;">
+                        <div class="card-body">
+                            <span class="badge" style="background:var(--leon-gold); color:#000;">
+                                {{ ucfirst($item->category) }}
+                            </span>
+                            <h5 class="card-title mt-2">{{ $item->title }}</h5>
+                            <p class="card-text text-muted" style="font-size:0.9rem;">
+                                {{ $item->excerpt }}
+                            </p>
+                            <span class="fw-bold">Lire la suite →</span>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         @empty
             <div class="col-12 text-center text-muted py-5">Aucune actualité trouvée.</div>

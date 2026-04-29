@@ -24,4 +24,18 @@ class NewsController extends Controller
         
         return view('public.news.index', compact('news'));
     }
+
+    public function show(string $slug)
+    {
+        $news = News::published()
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Gain d'XP quand un utilisateur connecté ouvre une actualité
+        if (auth()->check()) {
+            auth()->user()->increment('experience_points', 2);
+        }
+
+        return view('public.news.show', compact('news'));
+    }
 }

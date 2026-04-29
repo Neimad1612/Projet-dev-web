@@ -33,11 +33,46 @@ class DatabaseSeeder extends Seeder
         // Appareils
         Device::factory(10)->create();
 
+        
         // Actualités
-        News::create([
-            'title' => 'Menu de la semaine', 'slug' => Str::slug('Menu de la semaine'),
-            'content' => 'Voici notre délicieux menu...', 'category' => 'menu',
-            'is_published' => true, 'published_at' => now(), 'author_id' => $admin->id
-        ]);
+        $news = [
+            [
+                'title' => 'Nouveau four connecté en cuisine',
+                'slug' => Str::slug('Nouveau four connecté en cuisine'),
+                'excerpt' => 'Chez Léon modernise sa cuisine avec un four connecté permettant un meilleur suivi des températures.',
+                'content' => 'Notre restaurant intègre un nouveau four connecté capable de suivre précisément la température, le temps de cuisson et l’état de fonctionnement. Cette amélioration permet une meilleure régularité en cuisine et une gestion plus efficace de l’énergie.',
+                'category' => 'announcement',
+                'is_published' => true,
+                'published_at' => now(),
+                'author_id' => $admin->id,
+            ],
+            [
+                'title' => 'Optimisation de la cave à vin',
+                'slug' => Str::slug('Optimisation de la cave à vin'),
+                'excerpt' => 'La cave à vin connectée permet de surveiller la température et l’humidité en temps réel.',
+                'content' => 'La cave à vin de Chez Léon est désormais suivie par des capteurs permettant de contrôler les conditions de conservation. Les données de température et d’humidité permettent d’assurer une meilleure stabilité pour les bouteilles sensibles.',
+                'category' => 'maintenance',
+                'is_published' => true,
+                'published_at' => now(),
+                'author_id' => $admin->id,
+            ],
+            [
+                'title' => 'Menu de la semaine',
+                'slug' => Str::slug('Menu de la semaine'),
+                'excerpt' => 'Découvrez le menu proposé cette semaine par Chez Léon.',
+                'content' => 'Voici notre délicieux menu de la semaine, élaboré à partir de produits frais et de saison.',
+                'category' => 'menu',
+                'is_published' => true,
+                'published_at' => now(),
+                'author_id' => $admin->id,
+            ],
+        ];
+
+        foreach ($news as $item) {
+            News::updateOrCreate(
+                ['slug' => $item['slug']],
+                $item
+            );
+        }
     }
 }
