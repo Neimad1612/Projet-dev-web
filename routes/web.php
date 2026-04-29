@@ -8,7 +8,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Auth\{LoginController, RegisterController};
 use App\Http\Controllers\Simple\{DashboardController, ProfileController, DeviceViewController, ExperienceController};
 use App\Http\Controllers\Complex\{DeviceManagementController};
-use App\Http\Controllers\Admin\{AdminDashboardController, AdminUserController};
+use App\Http\Controllers\Admin\{AdminDashboardController, AdminUserController, DeviceModerationController};
 use App\Http\Controllers\UserProfileController;
 
 // ── MODULE PUBLIC (Visiteurs) ─────────────────────────────────────────────
@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:complex,admin', 'level:advanced', 'track.login'
     Route::delete('/objets/{device}', [DeviceManagementController::class, 'destroy'])->name('devices.destroy');
     Route::post('/objets/{device}/controle', [DeviceManagementController::class, 'control'])->name('devices.control');
     Route::put('/objets/{device}/zone', [DeviceManagementController::class, 'assignZone'])->name('devices.assign-zone');
+    Route::post('/devices/{device}/request-delete', [DeviceViewController::class, 'requestDelete'])->name('devices.request-delete');
     // --- ROUTES PLACEHOLDERS (En construction) ---
     Route::get('/rapports', function() { return '<div style="text-align:center; padding:100px; font-family:sans-serif;"><h1>🚧 Module Rapports</h1><p>Prévu pour le Sprint 2.</p><a href="/gestion/objets">Retour</a></div>'; })->name('reports.index');
     Route::get('/zones', function() { return '<div style="text-align:center; padding:100px; font-family:sans-serif;"><h1>🚧 Gestion des Zones</h1><p>Prévu pour le Sprint 2.</p><a href="/gestion/objets">Retour</a></div>'; })->name('zones.index');
@@ -61,6 +62,9 @@ Route::middleware(['auth', 'role:admin', 'level:expert', 'track.login'])->prefix
     Route::post('/utilisateurs/{user}/approuver', [AdminUserController::class, 'approve'])->name('users.approve');
     Route::post('/utilisateurs/{user}/xp', [AdminUserController::class, 'adjustXp'])->name('users.xp');
     Route::get('/utilisateurs/{user}/profil', [UserProfileController::class, 'show'])->name('users.show');
+    Route::get('/objets/suppressions', [DeviceModerationController::class, 'deletionRequests'])->name('devices.deletion-requests');
+    Route::post('/objets/{device}/approve-delete', [DeviceModerationController::class, 'approveDelete'])->name('devices.approve-delete');
+    Route::post('/objets/{device}/reject-delete', [DeviceModerationController::class, 'rejectDelete'])->name('devices.reject-delete');
 
     // --- ROUTES PLACEHOLDERS (En construction) ---
     Route::get('/categories', function() { return '<div style="text-align:center; padding:100px; font-family:sans-serif;"><h1>🚧 Gestion des Catégories</h1><p>Prévu pour le Sprint 2.</p><a href="/administration">Retour</a></div>'; })->name('categories.index');

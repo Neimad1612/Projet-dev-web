@@ -59,4 +59,22 @@ class DeviceViewController extends Controller
 
         return view('simple.devices.show', compact('device', 'readingsByMetric'));
     }
+
+    public function requestDelete(Device $device)
+    {
+        if (!in_array(auth()->user()->role, ['complex', 'admin'])) {
+            abort(403);
+        }
+
+        if ($device->delete_requested) {
+            return back()->with('error', 'Déjà demandé');
+        }
+
+        $device->update([
+            'delete_requested' => true,
+            'delete_requested_at' => now(),
+        ]);
+
+        return back()->with('success', 'Demande envoyée');
+    }
 }

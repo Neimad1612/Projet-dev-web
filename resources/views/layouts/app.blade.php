@@ -748,6 +748,9 @@
                                             @endif
                                         </a>
                                     </li>
+                                    <a class="dropdown-item" href="{{ route('admin.devices.deletion-requests') }}">
+                                        Demandes de suppression
+                                    </a>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ route('admin.categories.index') }}">Catégories</a></li>
                                     <li><a class="dropdown-item" href="{{ route('admin.zones.index') }}">Zones</a></li>

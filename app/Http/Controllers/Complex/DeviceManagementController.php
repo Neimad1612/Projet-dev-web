@@ -157,4 +157,5 @@ public function destroy(Device $device): RedirectResponse
     return redirect()->route('complex.devices.index')
         ->with('success', 'Appareil supprimé avec succès.');
 }
+
 }

@@ -67,5 +67,20 @@
             </a>
         </div>
     @endif
+    @if(auth()->check() && in_array(auth()->user()->role, ['complex', 'admin']))
+
+        @if(!$device->delete_requested)
+            <form method="POST" action="{{ route('complex.devices.request-delete', $device->id) }}">
+                @csrf
+                <button class="btn btn-danger mt-3">
+                    Demander la suppression
+                </button>
+            </form>
+        @else
+            <p class="text-warning mt-3">
+                Suppression déjà demandée
+            </p>
+        @endif
+    @endif
 </div>
 @endsection
