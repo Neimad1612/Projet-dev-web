@@ -55,7 +55,9 @@
                         @forelse($users as $user)
                             <tr>
                                 <td>
-                                    <strong>{{ $user->name }}</strong><br>
+                                    <a href="{{ route('admin.users.show', $user) }}" class="text-decoration-none">
+                                        <strong>{{ $user->name }}</strong>
+                                    </a><br>
                                     <small class="text-muted">{{ $user->email }} (@ {{ $user->pseudo }})</small>
                                 </td>
                                 <td>

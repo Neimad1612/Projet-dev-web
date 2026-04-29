@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, Hash, Storage};
 use Illuminate\Validation\Rule;
 
+
 class ProfileController extends Controller
 {
     public function show()
@@ -62,9 +63,8 @@ class ProfileController extends Controller
         return redirect()->route('simple.profile.show')->with('success', 'Votre profil a été mis à jour avec succès.');
     }
 
-    public function showPublic($pseudo)
+    public function showPublicUser(User $user)
     {
-        $user = User::where('pseudo', $pseudo)->firstOrFail();
-        return view('simple.profile.public', compact('user'));
+        return view('simple.user-public', compact('user'));
     }
 }
