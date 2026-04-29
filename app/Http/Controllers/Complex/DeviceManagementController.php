@@ -52,20 +52,7 @@ class DeviceManagementController extends Controller
         return view('simple.devices.index', compact('devices', 'categories', 'zones', 'stats'));
     }
 
-    // ─────────────────────────────────────────────────────────
-    // CREATE — formulaire de création
-    // ─────────────────────────────────────────────────────────
-    public function create(): View
-    {
-        $categories = DeviceCategory::allActiveCached();
-        $zones      = Zone::allActiveCached();
 
-        return view('complex.devices.create', compact('categories', 'zones'));
-    }
-
-    // ─────────────────────────────────────────────────────────
-    // STORE — enregistrement d'un nouvel appareil
-    // ─────────────────────────────────────────────────────────
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -79,27 +66,18 @@ class DeviceManagementController extends Controller
             'firmware_version'  => ['nullable', 'string', 'max:50'],
             'installation_date' => ['nullable', 'date'],
             'warranty_until'    => ['nullable', 'date', 'after_or_equal:installation_date'],
-        ], [
-            'serial_number.unique'              => 'Ce numéro de série est déjà utilisé.',
-            'category_id.exists'                => 'Catégorie invalide.',
-            'zone_id.exists'                    => 'Zone invalide.',
-            'warranty_until.after_or_equal'     => 'La garantie doit être postérieure à la date d\'installation.',
         ]);
 
         $device = Device::create([
             ...$validated,
-            'status'     => 'offline',   // tout nouvel appareil commence hors ligne
+            'status'     => 'offline',
             'is_active'  => true,
             'created_by' => Auth::id(),
         ]);
 
-        // Invalider les caches stats et liste
         Cache::forget('devices.stats');
-
-        // Invalider le cache des zones pour mettre à jour les compteurs
         Zone::clearCache();
 
-        // Attribuer les XP pour ajout d'un appareil
         $this->xpService->award(
             Auth::user(),
             'device_added',
@@ -108,134 +86,15 @@ class DeviceManagementController extends Controller
             $device
         );
 
-        return redirect()
-            ->route('complex.devices.index')
+        return redirect()->route('complex.devices.index')
             ->with('success', "L'appareil « {$device->name} » a été créé avec succès.");
     }
 
-    // ─────────────────────────────────────────────────────────
-    // SHOW — détail d'un appareil
-    // ─────────────────────────────────────────────────────────
-    public function show(Device $device): View
-    {
-        $device->load(['category', 'zone', 'creator', 'controls' => function ($q) {
-            $q->with('user')->latest()->limit(10);
-        }]);
-
-        $readingsRaw = Cache::remember(
-            "device.{$device->id}.readings.24h",
-            300,
-            fn() => $device->readings()
-                ->where('recorded_at', '>=', now()->subDay())
-                ->orderBy('recorded_at')
-                ->get()
-                ->toArray()
-        );
-
-        $readingsByMetric = collect($readingsRaw)->groupBy('metric');
-
-        return view('complex.devices.show', compact('device', 'readingsByMetric'));
-    }
-
-    // ─────────────────────────────────────────────────────────
-    // EDIT — formulaire d'édition
-    // ─────────────────────────────────────────────────────────
-    public function edit(Device $device): View
-    {
-        $categories = DeviceCategory::allActiveCached();
-        $zones      = Zone::allActiveCached();
-
-        return view('complex.devices.edit', compact('device', 'categories', 'zones'));
-    }
-
-    // ─────────────────────────────────────────────────────────
-    // UPDATE — mise à jour
-    // ─────────────────────────────────────────────────────────
-    public function update(Request $request, Device $device): RedirectResponse
+public function create(): View
 {
-    $validated = $request->validate([
-        'name'              => ['required', 'string', 'max:255'],
-        // On exclut l'ID actuel de la vérification d'unicité
-        'serial_number'     => ['required', 'string', 'max:100', "unique:devices,serial_number,{$device->id}"],
-        'category_id'       => ['required', 'integer', 'exists:device_categories,id'],
-        'zone_id'           => ['nullable', 'integer', 'exists:zones,id'],
-        'is_active'         => ['required', 'boolean'],
-    ]);
+    $categories = \App\Models\DeviceCategory::orderBy('name')->get();
+    $zones = \App\Models\Zone::orderBy('name')->get();
 
-    $device->update($validated);
-    $device->invalidateDataCache(); // Nettoyage du cache spécifique à l'objet
-
-    return redirect()
-        ->route('complex.devices.index')
-        ->with('success', "Appareil mis à jour.");
+    return view('complex.devices.create', compact('categories', 'zones'));
 }
-
-    // ─────────────────────────────────────────────────────────
-    // DESTROY — suppression douce (SoftDelete)
-    // ─────────────────────────────────────────────────────────
-    public function destroy(Device $device): RedirectResponse
-    {
-        $name = $device->name;
-        $device->delete();
-
-        Cache::forget('devices.stats');
-        Cache::forget("device.{$device->id}.current_data");
-
-        return redirect()
-            ->route('complex.devices.index')
-            ->with('success', "Appareil « {$name} » supprimé.");
-    }
-
-    // ─────────────────────────────────────────────────────────
-    // CONTROL — envoyer une commande IoT
-    // ─────────────────────────────────────────────────────────
-    public function control(Request $request, Device $device): RedirectResponse
-    {
-        $validated = $request->validate([
-            'action'     => ['required', 'string', 'in:power_on,power_off,set_temperature,restart,set_mode'],
-            'parameters' => ['nullable', 'array'],
-            'parameters.temperature' => ['nullable', 'numeric', 'min:-30', 'max:300'],
-            'parameters.mode'        => ['nullable', 'string', 'max:50'],
-        ]);
-
-        $control = $device->controls()->create([
-            'user_id'    => Auth::id(),
-            'action'     => $validated['action'],
-            'parameters' => $validated['parameters'] ?? [],
-            'status'     => 'pending',
-        ]);
-
-        // TODO: dispatch(new SendDeviceCommand($control));
-
-        $device->invalidateDataCache();
-
-        $this->xpService->award(
-            Auth::user(),
-            'device_controlled',
-            User::XP_DEVICE_CONTROL,
-            "Commande « {$validated['action']} » sur {$device->name}",
-            $device
-        );
-
-        return back()->with('success', "Commande « {$validated['action']} » envoyée à {$device->name}.");
-    }
-
-    // ─────────────────────────────────────────────────────────
-    // ASSIGN ZONE — changer la zone d'un appareil
-    // ─────────────────────────────────────────────────────────
-    public function assignZone(Request $request, Device $device): RedirectResponse
-    {
-        $request->validate([
-            'zone_id' => ['nullable', 'integer', 'exists:zones,id'],
-        ]);
-
-        $device->update(['zone_id' => $request->zone_id]);
-        $device->invalidateDataCache();
-
-        $zoneName = $request->zone_id
-            ? Zone::find($request->zone_id)?->name ?? 'inconnue'
-            : 'aucune zone';
-
-        return back()->with('success', "Zone mise à jour : {$zoneName}.");
-    }
 }

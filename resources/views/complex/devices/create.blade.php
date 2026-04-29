@@ -614,7 +614,7 @@
                             Récompense
                         </p>
                         <div class="xp-badge">
-                            ⭐ +{{ \App\Models\User::XP_DEVICE_ADDED }} XP
+                            +{{ \App\Models\User::XP_DEVICE_ADDED }} XP
                             <span style="font-weight:400;opacity:0.7;">pour cet ajout</span>
                         </div>
                         <p style="font-size:0.72rem;color:var(--leon-muted);margin-top:8px;margin-bottom:0;">
@@ -630,19 +630,15 @@
                         </p>
                         <ul class="check-list">
                             <li>
-                                <span class="icon">📌</span>
                                 Le numéro de série doit être unique et correspondre à l'étiquette physique
                             </li>
                             <li>
-                                <span class="icon">🌐</span>
                                 L'adresse IP doit être dans le réseau local du restaurant
                             </li>
                             <li>
-                                <span class="icon">📅</span>
                                 La date de garantie déclenche des alertes avant expiration
                             </li>
                             <li>
-                                <span class="icon">🗂️</span>
                                 Vous pourrez modifier tous ces champs après création
                             </li>
                         </ul>

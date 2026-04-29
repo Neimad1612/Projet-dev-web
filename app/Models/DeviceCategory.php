@@ -25,19 +25,24 @@ class DeviceCategory extends Model
         return $this->hasMany(Device::class, 'category_id');
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            self::clearCache();
+        });
+
+        static::deleted(function () {
+            self::clearCache();
+        });
+    }
+
     // --- CORRECTION DU BUG DE CACHE ---
     public static function allActiveCached(): Collection
-    {
-        $raw = Cache::remember(
-            'device_categories.active',
-            3600,
-            fn() => static::where('is_active', true)->orderBy('name')->get()->toArray()
-        );
-
-        return collect($raw)->map(
-            fn(array $data) => (new static)->forceFill($data)
-        );
-    }
+{
+    return static::where('is_active', true)
+        ->orderBy('name')
+        ->get();
+}
 
     public static function clearCache(): void
     {

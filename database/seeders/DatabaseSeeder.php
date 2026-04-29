@@ -14,7 +14,13 @@ class DatabaseSeeder extends Seeder
         foreach ($zones as $zone) Zone::firstOrCreate(['slug' => $zone['slug']], $zone);
 
         // Catégories
-        $categories = [['name' => 'Four', 'slug' => 'four'], ['name' => 'Thermostat', 'slug' => 'thermostat']];
+        $categories = [
+        ['name' => 'Four', 'slug' => 'four', 'is_active' => 1],
+        ['name' => 'Réfrigérateur', 'slug' => 'refrigerateur', 'is_active' => 1],
+        ['name' => 'Thermostat', 'slug' => 'thermostat', 'is_active' => 1],
+        ['name' => 'Borne commande', 'slug' => 'borne-commande', 'is_active' => 1],
+        ['name' => 'Cave à vin', 'slug' => 'cave-a-vin', 'is_active' => 1],
+        ['name' => 'Plonge', 'slug' => 'plonge', 'is_active' => 1],];
         foreach ($categories as $cat) DeviceCategory::firstOrCreate(['slug' => $cat['slug']], $cat);
 
         // Utilisateurs
