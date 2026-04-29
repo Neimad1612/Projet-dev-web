@@ -103,10 +103,12 @@
                     <div class="form-card-header"><h2>Actions</h2></div>
                     <div class="form-card-body">
                         <div class="field">
-                            <label class="field-label">Statut d'activation</label>
-                            <select name="is_active" class="field-select">
-                                <option value="1" {{ $device->is_active ? 'selected' : '' }}>Actif</option>
-                                <option value="0" {{ !$device->is_active ? 'selected' : '' }}>Inactif</option>
+                            <label class="field-label">État de l'objet</label>
+                            <select name="status" class="field-select">
+                                <option value="online" {{ $device->status === 'online' ? 'selected' : '' }}>En ligne</option>
+                                <option value="offline" {{ $device->status === 'offline' ? 'selected' : '' }}>Hors ligne</option>
+                                <option value="maintenance" {{ $device->status === 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                                <option value="error" {{ $device->status === 'error' ? 'selected' : '' }}>Erreur</option>
                             </select>
                         </div>
                         <button type="submit" class="btn-submit">Enregistrer les modifications</button>

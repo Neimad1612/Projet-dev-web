@@ -71,7 +71,6 @@ class DeviceManagementController extends Controller
         $device = Device::create([
             ...$validated,
             'status'     => 'offline',
-            'is_active'  => true,
             'created_by' => Auth::id(),
         ]);
 
@@ -96,5 +95,66 @@ public function create(): View
     $zones = \App\Models\Zone::orderBy('name')->get();
 
     return view('complex.devices.create', compact('categories', 'zones'));
+}
+
+// ─────────────────────────────────────────────────────────
+// SHOW — détail d’un appareil
+// ─────────────────────────────────────────────────────────
+public function show(Device $device): View
+{
+    $device->load(['category', 'zone', 'creator', 'readings']);
+
+    return view('complex.devices.show', compact('device'));
+}
+
+// ─────────────────────────────────────────────────────────
+// EDIT — formulaire de modification
+// ─────────────────────────────────────────────────────────
+public function edit(Device $device): View
+{
+    $categories = DeviceCategory::orderBy('name')->get();
+    $zones = Zone::orderBy('name')->get();
+
+    return view('complex.devices.edit', compact('device', 'categories', 'zones'));
+}
+
+// ─────────────────────────────────────────────────────────
+// UPDATE — mise à jour appareil
+// ─────────────────────────────────────────────────────────
+public function update(Request $request, Device $device): RedirectResponse
+{
+    $validated = $request->validate([
+        'name'              => ['required', 'string', 'max:255'],
+        'serial_number'     => ['required', 'string', 'max:100', 'unique:devices,serial_number,' . $device->id],
+        'category_id'       => ['required', 'integer', 'exists:device_categories,id'],
+        'zone_id'           => ['nullable', 'integer', 'exists:zones,id'],
+        'status'            => ['required', 'in:online,offline,maintenance,error'],
+        'model'             => ['nullable', 'string', 'max:255'],
+        'manufacturer'      => ['nullable', 'string', 'max:255'],
+        'ip_address'        => ['nullable', 'ip'],
+        'firmware_version'  => ['nullable', 'string', 'max:50'],
+        'installation_date' => ['nullable', 'date'],
+        'warranty_until'    => ['nullable', 'date', 'after_or_equal:installation_date'],
+    ]);
+
+    $device->update($validated);
+
+    Cache::forget('devices.stats');
+
+    return redirect()->route('complex.devices.index')
+        ->with('success', 'Appareil mis à jour avec succès.');
+}
+
+// ─────────────────────────────────────────────────────────
+// DESTROY — suppression appareil
+// ─────────────────────────────────────────────────────────
+public function destroy(Device $device): RedirectResponse
+{
+    $device->delete();
+
+    Cache::forget('devices.stats');
+
+    return redirect()->route('complex.devices.index')
+        ->with('success', 'Appareil supprimé avec succès.');
 }
 }

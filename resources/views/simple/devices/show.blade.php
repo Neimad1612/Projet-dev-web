@@ -59,5 +59,13 @@
             </div>
         </div>
     </div>
+    @if(auth()->check() && in_array(auth()->user()->role, ['complex', 'admin']))
+        <div class="text-center mt-5">
+            <a href="{{ route('complex.devices.edit', $device->id) }}" 
+               class="btn btn-primary px-4 py-2">
+                Modifier l'objet
+            </a>
+        </div>
+    @endif
 </div>
 @endsection

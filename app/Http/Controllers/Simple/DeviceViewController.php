@@ -23,8 +23,7 @@ class DeviceViewController extends Controller
     public function index(Request $request)
     {
         $query = Device::query()
-            ->with(['category', 'zone'])
-            ->where('is_active', true);
+            ->with(['category', 'zone']);
 
         if ($request->filled('category')) $query->byCategory($request->category);
         if ($request->filled('zone'))     $query->byZone($request->zone);
