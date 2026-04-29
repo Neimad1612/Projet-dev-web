@@ -41,7 +41,7 @@
 
         {{-- Carte En Ligne --}}
         <div class="col-md-3">
-            <div class="card shadow-sm border-0" style="border-left: 4px solid #2ECC71 !important; cursor: pointer;" onclick="window.location='{{ route('complex.devices.index') }}'">
+            <div class="card shadow-sm border-0" style="border-left: 4px solid #2ECC71 !important; cursor: pointer;" onclick="window.location='{{ route('complex.devices.index') }}?status=online'">
                 <div class="card-body">
                     <h6 class="text-muted text-uppercase mb-1" style="font-size:0.8rem;">Appareils en Ligne</h6>
                     <h2 class="mb-0 text-success">{{ $stats['online_devices'] }}</h2>
