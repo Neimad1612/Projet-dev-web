@@ -11,7 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+
+        // ── Enregistrement des middlewares avec alias ──────────────
+        $middleware->alias([
+            'role'              => \App\Http\Middleware\CheckRole::class,
+            'level'             => \App\Http\Middleware\CheckLevel::class,
+            'track.login'       => \App\Http\Middleware\TrackLogin::class,
+            'track.device.view' => \App\Http\Middleware\TrackDeviceView::class,
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
