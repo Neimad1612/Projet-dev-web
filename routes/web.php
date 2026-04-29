@@ -74,3 +74,7 @@ Route::middleware(['auth', 'role:admin', 'level:expert', 'track.login'])->prefix
     Route::get('/zones', function() { return '<div style="text-align:center; padding:100px; font-family:sans-serif;"><h1>🚧 Administration des Zones</h1><p>Prévu pour le Sprint 2.</p><a href="/administration">Retour</a></div>'; })->name('zones.index');
     Route::get('/integrite', function() { return '<div style="text-align:center; padding:100px; font-family:sans-serif;"><h1>🚧 Intégrité des données</h1><p>Prévu pour le Sprint 2.</p><a href="/administration">Retour</a></div>'; })->name('integrity.index');
 });
+
+Route::get('/login', function () {
+    return redirect()->route('public.login');
+})->name('login');
