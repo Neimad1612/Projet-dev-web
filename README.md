@@ -1,4 +1,4 @@
-### Chez Léon — Plateforme IoT pour un restaurant gastronomique
+# Chez Léon — Plateforme IoT pour un restaurant gastronomique
 
 Projet de développement web réalisé dans le cadre de l’ING1 à CY Tech (2025-2026).
 
@@ -31,11 +31,11 @@ L’interface utilise Bootstrap avec quelques personnalisations CSS.
 
 ## Installation et lancement
 
-# Prérequis
+### Prérequis
 Il faut avoir PHP 8.3 ou plus, Composer, Node.js et Git.
 
 
-# Installation
+### Installation
 
 Cloner le projet :
 `git clone https://github.com/Neimad1612/Projet-dev-web.git
