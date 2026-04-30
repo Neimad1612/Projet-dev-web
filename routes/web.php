@@ -23,7 +23,7 @@ Route::prefix('')->name('public.')->group(function () {
     Route::get('/connexion', [LoginController::class, 'showForm'])->name('login');
     Route::post('/connexion', [LoginController::class, 'login'])->name('login.post');
     Route::post('/deconnexion', [LoginController::class, 'logout'])->name('logout');
-});
+    Route::get('/deconnexion', function() { return redirect()->route('public.home');})->name('logout.get');});
 
 // ── MODULE SIMPLE (Utilisateurs simples approuvés) ────────────────────────
 Route::middleware(['auth', 'role:simple,complex,admin', 'track.login'])->prefix('espace')->name('simple.')->group(function () {
@@ -35,7 +35,6 @@ Route::middleware(['auth', 'role:simple,complex,admin', 'track.login'])->prefix(
     Route::get('/objets', [DeviceViewController::class, 'index'])->name('devices.index');
     Route::get('/objets/{device}', [DeviceViewController::class, 'show'])->middleware('track.device.view')->name('devices.show');
     Route::get('/experience', [ExperienceController::class, 'index'])->name('xp.index');
-    Route::get('/utilisateurs', [UserProfileController::class, 'index'])->name('users.index');
     Route::get('/utilisateurs', [UserProfileController::class, 'index'])->name('users.index');
     Route::get('/utilisateurs/{user}', [UserProfileController::class, 'show'])->name('users.show');
 });
