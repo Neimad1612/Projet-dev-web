@@ -55,20 +55,21 @@ class User extends Authenticatable
             // Synchronise le rôle avec le niveau
             $this->syncRoleWithLevel();
 
+            $this->save();
+
             return true;
         }
 
         return false;
     }
 
-    protected function syncRoleWithLevel(): void {
-        if ($this->level === self::LEVEL_ADVANCED && $this->role === self::ROLE_SIMPLE) {
-            $this->role = self::ROLE_COMPLEX;
-        }
-        if ($this->level === self::LEVEL_EXPERT && $this->role === self::ROLE_COMPLEX) {
-            $this->role = self::ROLE_ADMIN;
-        }
-
+    protected function syncRoleWithLevel(): void
+    {
+        $this->role = match ($this->level) {
+            self::LEVEL_EXPERT => self::ROLE_ADMIN,
+            self::LEVEL_ADVANCED => self::ROLE_COMPLEX,
+            default => self::ROLE_SIMPLE,
+        };
     }
 
     public function getAgeAttribute(): ?int {
