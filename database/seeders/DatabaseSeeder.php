@@ -32,10 +32,24 @@ class DatabaseSeeder extends Seeder
 
         // Appareils
         Device::factory()->count(10)->create()->each(function ($device) {
+            $category = DeviceCategory::inRandomOrder()->first();
+
+            $names = [
+                'four' => 'Four connecté',
+                'refrigerateur' => 'Réfrigérateur intelligent',
+                'thermostat' => 'Thermostat IoT',
+                'borne-commande' => 'Borne de commande tactile',
+                'cave-a-vin' => 'Cave à vin connectée',
+                'plonge' => 'Système de plonge automatisé',
+            ];
+
+            $baseName = $names[$category->slug] ?? 'Appareil connecté';
+
             $device->update([
+                'name' => $baseName . ' #' . fake()->numberBetween(1, 100),
                 'status' => fake()->randomElement(['online', 'offline', 'maintenance']),
                 'is_active' => fake()->boolean(80),
-                'category_id' => DeviceCategory::inRandomOrder()->first()->id,
+                'category_id' => $category->id,
                 'zone_id' => Zone::inRandomOrder()->first()->id,
                 'current_data' => [
                     'temperature' => fake()->randomFloat(1, -5, 30),
