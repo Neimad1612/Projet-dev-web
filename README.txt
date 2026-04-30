@@ -49,6 +49,10 @@ npm install npm run build
 Configurer l’environnement :
 cp .env.example .env php artisan key:generate 
 
+Pour pouvoir importer une photo de profil 
+php artisan storage:link
+
+
 Créer la base de données et remplir les données de test :
 php artisan migrate:fresh --seed 
 
