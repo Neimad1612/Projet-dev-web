@@ -45,12 +45,36 @@
                         Données en direct
                     </h3>
                     <div class="mt-3">
-                        @if(empty($device->current_data))
+                        @php
+                            $data = $device->current_data;
+
+                            if (is_string($data)) {
+                                $data = json_decode($data, true);
+                            }
+
+                            if (!is_array($data)) {
+                                $data = [];
+                            }
+                        @endphp
+
+                        @if(count($data) === 0)
                             <p class="text-muted">Aucune donnée reçue pour le moment.</p>
                         @else
                             <ul class="list-unstyled" style="line-height: 2;">
-                                @foreach($device->current_data as $key => $val)
-                                    <li><strong>{{ ucfirst($key) }} :</strong> {{ is_array($val) ? json_encode($val) : $val }}</li>
+                                @foreach($data as $key => $val)
+                                    <li>
+                                        <strong>{{ ucfirst(str_replace('_', ' ', $key)) }} :</strong>
+
+                                        @if(is_bool($val))
+                                            {{ $val ? 'Oui' : 'Non' }}
+                                        @elseif(is_numeric($val))
+                                            {{ $val }}
+                                        @elseif(is_array($val))
+                                            {{ json_encode($val) }}
+                                        @else
+                                            {{ $val }}
+                                        @endif
+                                    </li>
                                 @endforeach
                             </ul>
                         @endif

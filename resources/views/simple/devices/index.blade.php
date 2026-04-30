@@ -295,46 +295,39 @@
                     </div>
 
                     <div class="device-card-body">
-                        @php $data = $device->current_data ?? []; @endphp
+                        @php
+                            $data = $device->current_data;
 
-                        @if(!empty($data['temperature']))
-                            <div class="device-data-row">
-                                <span class="device-data-key">Température</span>
-                                <span class="device-data-val">{{ number_format((float) $data['temperature'], 1) }} °C</span>
-                            </div>
-                        @endif
+                            if (is_string($data)) {
+                                $data = json_decode($data, true);
+                            }
 
-                        @if(isset($data['humidity']))
-                            <div class="device-data-row">
-                                <span class="device-data-key">Humidité</span>
-                                <span class="device-data-val">{{ number_format((float) $data['humidity'], 1) }} %</span>
-                            </div>
-                        @endif
+                            if (!is_array($data)) {
+                                $data = [];
+                            }
+                        @endphp
 
-                        @if(isset($data['power_state']))
+                        @forelse($data as $key => $val)
                             <div class="device-data-row">
-                                <span class="device-data-key">Alimentation</span>
-                                <span class="device-data-val"
-                                      style="color: {{ $data['power_state'] === 'on' ? '#27AE60' : 'var(--leon-muted)' }}">
-                                    {{ $data['power_state'] === 'on' ? 'Allumé' : 'Éteint' }}
+                                <span class="device-data-key">
+                                    {{ ucfirst(str_replace('_', ' ', $key)) }}
+                                </span>
+
+                                <span class="device-data-val">
+                                    @if(is_bool($val))
+                                        {{ $val ? 'Oui' : 'Non' }}
+                                    @elseif(is_numeric($val))
+                                        {{ number_format((float) $val, 1) }}
+                                    @else
+                                        {{ $val }}
+                                    @endif
                                 </span>
                             </div>
-                        @endif
-
-                        @if(!empty($data['alert']))
-                            <div class="device-data-row">
-                                <span class="device-data-key">Alerte</span>
-                                <span class="device-data-val" style="color:#E74C3C;font-size:0.75rem;">
-                                    ⚠ {{ $data['alert'] }}
-                                </span>
-                            </div>
-                        @endif
-
-                        @if(empty($data))
+                        @empty
                             <p style="font-size:0.78rem;color:var(--leon-muted);text-align:center;margin:0.5rem 0;">
                                 Aucune donnée disponible
                             </p>
-                        @endif
+                        @endforelse
                     </div>
 
                     <div class="device-card-footer">

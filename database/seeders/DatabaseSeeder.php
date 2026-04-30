@@ -45,15 +45,44 @@ class DatabaseSeeder extends Seeder
 
             $baseName = $names[$category->slug] ?? 'Appareil connecté';
 
+            $data = match ($category->slug) {
+                'four' => [
+                    'temperature' => fake()->randomFloat(1, 150, 250),
+                    'power' => fake()->numberBetween(1000, 3000),
+                ],
+                'refrigerateur' => [
+                    'temperature' => fake()->randomFloat(1, 0, 5),
+                    'door_open' => fake()->boolean(10),
+                ],
+                'thermostat' => [
+                    'temperature' => fake()->randomFloat(1, 18, 25),
+                    'target_temperature' => fake()->randomFloat(1, 19, 23),
+                ],
+                'cave-a-vin' => [
+                    'temperature' => fake()->randomFloat(1, 10, 14),
+                    'humidity' => fake()->randomFloat(1, 60, 80),
+                ],
+                'borne-commande' => [
+                    'temperature' => fake()->randomFloat(1, 20, 30),
+                    'active_sessions' => fake()->numberBetween(0, 5),
+                ],
+                'plonge' => [
+                    'temperature' => fake()->randomFloat(1, 30, 60),
+                    'cycle_active' => fake()->boolean(50),
+                ],
+                default => [
+                    'temperature' => fake()->randomFloat(1, 18, 25),
+                    'status' => fake()->randomElement(['ok', 'warning']),
+                ],
+            };
+
             $device->update([
                 'name' => $baseName . ' #' . fake()->numberBetween(1, 100),
                 'status' => fake()->randomElement(['online', 'offline', 'maintenance']),
                 'is_active' => fake()->boolean(80),
                 'category_id' => $category->id,
                 'zone_id' => Zone::inRandomOrder()->first()->id,
-                'current_data' => [
-                    'temperature' => fake()->randomFloat(1, -5, 30),
-                ],
+                'current_data' => $data,
             ]);
         });
 

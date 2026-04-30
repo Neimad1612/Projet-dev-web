@@ -11,7 +11,12 @@ class Device extends Model
 {
     use HasFactory, SoftDeletes;
     protected $fillable = ['name', 'serial_number', 'model', 'manufacturer', 'category_id', 'zone_id', 'status', 'current_data', 'last_seen_at', 'ip_address', 'firmware_version', 'installation_date', 'warranty_until', 'created_by', 'delete_requested', 'delete_requested_at'];
-    protected function casts(): array { return ['current_data' => 'array', 'last_seen_at' => 'datetime', 'installation_date' => 'date', 'warranty_until' => 'date']; }
+    protected $casts = [
+        'current_data' => 'array',
+        'last_seen_at' => 'datetime',
+        'installation_date' => 'date',
+        'warranty_until' => 'date',
+    ];
 
     public function category(): BelongsTo { return $this->belongsTo(DeviceCategory::class, 'category_id'); }
     public function zone(): BelongsTo { return $this->belongsTo(Zone::class); }
@@ -30,6 +35,11 @@ class Device extends Model
 
     public function isOnline(): bool { return $this->status === 'online'; }
     public function getIsActiveAttribute(): bool{ return $this->status === 'online'; }
-    public function getCachedCurrentData(): ?array { return Cache::remember("device.{$this->id}.current_data", 30, fn() => $this->current_data); }
+    public function getCachedCurrentData(): array
+{
+    Cache::forget("device.{$this->id}.current_data");
+
+    return $this->current_data ?? [];
+}
     public function invalidateDataCache(): void { Cache::forget("device.{$this->id}.current_data"); }
 }

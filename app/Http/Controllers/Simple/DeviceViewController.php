@@ -30,7 +30,10 @@ class DeviceViewController extends Controller
         if ($request->filled('status'))   $query->where('status', $request->status);
         if ($request->filled('search'))   $query->search($request->search);
 
-        $devices    = $query->paginate(12)->withQueryString();
+        $devices = $query->paginate(12)->withQueryString();
+
+        // Ensure JSON-hidden attributes (like current_data) are visible in index view
+        $devices->getCollection()->each->makeVisible('current_data');
 
         // Les deux variables utilisent désormais la même méthode de cache
         // → toujours des Collections d'objets Eloquent, jamais de tableaux bruts
