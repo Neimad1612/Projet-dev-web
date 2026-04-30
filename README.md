@@ -1,10 +1,10 @@
-Chez Léon — Plateforme IoT pour un restaurant gastronomique
+### Chez Léon — Plateforme IoT pour un restaurant gastronomique
 
 Projet de développement web réalisé dans le cadre de l’ING1 à CY Tech (2025-2026).
 
 
 
-Présentation
+## Présentation
 
 Chez Léon est une application web développée avec Laravel. Le projet simule le fonctionnement d’un restaurant gastronomique utilisant des objets connectés pour gérer certains aspects de son activité comme le suivi des températures ou la supervision d’équipements.
 
@@ -12,7 +12,7 @@ L’objectif est de comprendre comment l’IoT peut être intégré dans un proj
 
 
 
-Fonctionnement
+## Fonctionnement
 
 Le site propose plusieurs niveaux d’accès selon les utilisateurs. Un visiteur peut consulter les pages publiques. Une fois connecté, l’utilisateur a accès à certaines fonctionnalités liées aux objets connectés et à son profil.
 
@@ -20,7 +20,7 @@ Un niveau plus avancé permet de gérer les équipements, et un espace administr
 
 
 
-Aspects techniques
+## Aspects techniques
 
 Le projet est développé avec Laravel 11 et PHP 8.3. Les accès sont gérés avec des middlewares pour contrôler les rôles et les permissions.
 
@@ -29,49 +29,50 @@ Un système de points d’expérience a été ajouté pour suivre l’activité 
 L’interface utilise Bootstrap avec quelques personnalisations CSS.
 
 
-Installation et lancement
+## Installation et lancement
 
-Prérequis
+# Prérequis
 Il faut avoir PHP 8.3 ou plus, Composer, Node.js et Git.
 
 
-Installation
+# Installation
 
 Cloner le projet :
-git clone https://github.com/Neimad1612/Projet-dev-web.git cd Projet-dev-web 
+`git clone https://github.com/Neimad1612/Projet-dev-web.git
+cd Projet-dev-web`
 
 Installer les dépendances PHP :
-composer install 
+`composer install`
 
-Installer les dépendances front :
-npm install npm run build 
+Créer les dossiers de cache :
+`mkdir -p storage/framework/{cache,sessions,views}`
 
 Configurer l’environnement :
-cp .env.example .env php artisan key:generate 
+`cp .env.example .env
+php artisan key:generate`
 
-Pour pouvoir importer une photo de profil 
-php artisan storage:link
-
+Pour pouvoir importer une photo de profil :
+`php artisan storage:link`
 
 Créer la base de données et remplir les données de test :
-php artisan migrate:fresh --seed 
+`php artisan migrate:fresh --seed` 
 
 Lancer le serveur :
-php artisan serve 
+`php artisan serve` 
 
-Le site est ensuite accessible sur http://127.0.0.1:8000
+Le site est ensuite accessible [ici](http://127.0.0.1:8000)
 
 
-Organisation du projet
+## Organisation du projet
 
 Le projet est organisé de façon classique avec une partie pour la logique métier, une pour les vues, une pour les routes et une pour la base de données.
 
 
-Équipe
+## Équipe
 
 Le projet a été réalisé en groupe avec une répartition entre backend, frontend et base de données.
 
 
-Licence
+## Licence
 
 Projet académique réalisé à CY Tech. Usage pédagogique uniquement.
